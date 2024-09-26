@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @font-face {
+            font-family: ubuntu;
+            src: url(font/JosefinSans-VariableFont_wght.ttf);
+        }
+
+        main {
+            width: 100%;
+            height: auto;
+            background-color: #5bd8f0;
+            padding-top: 20px;
+            padding-bottom: 75px;
+            font-family: ubuntu;
+
+
+            >.timer {
+                width: 700px;
+                height: 600px;
+                margin: 0px auto;
+                display: flex;
+                flex-wrap: wrap;
+                background: rgb(67, 120, 190);
+                border-radius: 20px;
+
+
+                >.numbers {
+                    width: 100%;
+                    height: 50%;
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: space-evenly;
+                    align-items: center;
+
+                    >div {
+                        width: 100%;
+                        height: 50%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+
+                        &:nth-of-type(2) {
+                            opacity: 0;
+
+                            >h4 {
+                                color: rgb(255, 255, 255);
+                                font-size: 30px
+                            }
+
+                            >span {
+                                color: gray;
+                                font-size: 30px
+                            }
+                        }
+
+                        >span {
+                            font-size: 40px;
+                        }
+
+                        >h2 {
+                            font-size: 40px;
+                        }
+                    }
+                }
+
+                >.buttons {
+                    width: 100%;
+                    height: 50%;
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: space-evenly;
+                    align-items: center;
+
+                    >button {
+                        width: 100px;
+                        height: 30px;
+                        border-radius: 10px;
+                        background-color: #336499;
+                        color: white;
+                        text-transform: capitalize;
+                        font-size: 20px;
+                        font-family: ubuntu;
+
+                    }
+
+                    >#laps {
+                        width: 100%;
+                        height: 50%;
+                        display: flex;
+
+                        .lap {
+                            width: 335px;
+                            height: 100%;
+                            list-style-type: none;
+                            overflow: hidden;
+
+                            >li {
+                                font-size: 20px;
+                                text-align: center;
+                                margin-top: 5px;
+                            }
+
+                            >h3 {
+                                text-align: center;
+                                border-bottom: solid black 1px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div class="timer">
+            <div class="numbers">
+                <div>
+                    <h2>00</h2>
+                    <span>:</span>
+                    <h2>00</h2>
+                    <span>:</span>
+                    <h2>00</h2>
+                    <span>:</span>
+                    <h2>00</h2>
+                </div>
+                <div class="lapdigit">
+                    <h4>00</h4>
+                    <span>:</span>
+                    <h4>00</h4>
+                    <span>:</span>
+                    <h4>00</h4>
+                    <span>:</span>
+                    <h4>00</h4>
+                </div>
+            </div>
+            <div class="buttons">
+                <button id="start-button">start</button>
+                <button id="pause-button">pause</button>
+                <button id="lap-button">lap</button>
+                <button id="reset-button">reset</button>
+                <div id="laps">
+                    <ul class="lap">
+                        <h3>Lap</h3>
+
+                    </ul>
+                    <ul class="lap">
+                        <h3>Lap times</h3>
+                    </ul>
+                    <ul class="lap">
+                        <h3>overAll time </h3>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+<script>
+    const digit = document.querySelectorAll('h2')
+    const lapDigit = document.querySelectorAll('h4')
+    const laplist = document.querySelectorAll('.lap')
+    const lapbox = document.querySelector('.lapdigit')
+
+
+    let clickflag = 0
+    let lapFlag = 0
+    let lap = 0
+    let pause = ''
+    let lapPause = ''
+    // button selects for eventListeners
+    const startButton = document.getElementById('start-button')
+    const pauseButton = document.getElementById('pause-button')
+    const lapButton = document.getElementById('lap-button')
+    const resetButton = document.getElementById('reset-button')
+
+
+    // superglobal vars for time units 
+
+    ms = 0
+    s = 0
+    m = 0
+    h = 0
+    //lap units
+    ms1 = 0
+    s1 = 0
+    m1 = 0
+    h1 = 0
+    // start of timer by event listener and setinterval 
+    startButton.addEventListener('click', (e) => {
+
+        clickflag++
+        e.target.innerHTML = 'start'
+        if (clickflag <= 1) {
+            pause = setInterval(() => {
+                //ms counter
+                ms++
+                if (ms < 10) {
+                    digit[3].innerHTML = '0' + ms
+                } else {
+                    if (ms <= 99) {
+                        digit[3].innerHTML = ms
+                    } else {
+                        // second counter
+                        s++
+                        ms = 0
+                        if (s < 10) {
+                            digit[2].innerHTML = '0' + s
+                        } else if (s < 60) {
+                            digit[2].innerHTML = s
+                        } else {
+                            //minute counter
+                            s = 0
+                            digit[2].innerHTML = '0' + 0
+                            m++
+                            if (m < 10) {
+                                digit[1].innerHTML = '0' + m
+                            } else if (m < 60) {
+                                digit[1].innerHTML = m
+                            } else {
+                                //hour counter
+                                m = 0
+                                digit[1].innerHTML = '0' + m
+                                h++
+                                if (h < 10) {
+                                    digit[0].innerHTML = '0' + h
+                                } else {
+                                    digit[0].innerHTML = h
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }, 10)
+        }
+        // lap timer 
+        if (clickflag <= 1) {
+            lapPause = setInterval(() => {
+                //ms counter
+                ms1++
+                if (ms1 < 10) {
+                    lapDigit[3].innerHTML = '0' + ms1
+                } else {
+                    if (ms1 <= 99) {
+                        lapDigit[3].innerHTML = ms1
+                    } else {
+                        // second counter
+                        s1++
+                        ms1 = 0
+                        if (s1 < 10) {
+                            lapDigit[2].innerHTML = '0' + s1
+                        } else if (s < 60) {
+                            lapDigit[2].innerHTML = s1
+                        } else {
+                            //minute counter
+                            s1 = 0
+                            lapDigit[2].innerHTML = '0' + 0
+                            m1++
+                            if (m1 < 10) {
+                                lapDigit[1].innerHTML = '0' + m1
+                            } else if (m < 60) {
+                                lapDigit[1].innerHTML = m1
+                            } else {
+                                //hour counter
+                                m1 = 0
+                                lapDigit[1].innerHTML = '0' + m1
+                                h1++
+                                if (h1 < 10) {
+                                    lapDigit[0].innerHTML = '0' + h1
+                                } else {
+                                    lapDigit[0].innerHTML = h1
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }, 10)
+        }
+    })
+
+    //pause button 
+    pauseButton.addEventListener('click', pauseFunction)
+    function pauseFunction() {
+        clickflag = 0
+        lapFlag = 0
+        if (clickflag <= 1) {
+            startButton.innerHTML = 'resume'
+            clearInterval(pause)
+            clearInterval(lapPause)
+        }
+
+    }
+    //reset button
+    resetButton.addEventListener('click', () => {
+        ms = 0
+        s = 0
+        m = 0
+        h = 0
+        // lap units
+        ms1 = 0
+        s1 = 0
+        m1 = 0
+        h1 = 0
+        //lis
+        const lilap = document.querySelectorAll('ul>li')
+        digit.forEach((val) => {
+            val.innerHTML = '00'
+        })
+        lilap.forEach((val) => {
+            val.innerHTML = ''
+            console.log(val);
+        })
+        lapDigit.forEach((val) => {
+            val.innerHTML = '00'
+        })
+        pauseFunction()
+        startButton.innerHTML = 'start'
+        lapbox.style.opacity = '0'
+        lap = 0
+    })
+    //lap button
+    lapButton.addEventListener('click', () => {
+        lapFlag++
+        lap++
+        const liLap = document.createElement('li')
+        const liLapTime = document.createElement('li')
+        const liOverAllTime = document.createElement('li')
+        liLap.innerHTML = `0${lap}`
+        liOverAllTime.innerHTML = `${digit[0].innerHTML} : ${digit[1].innerHTML} : ${digit[2].innerHTML} : ${digit[3].innerHTML}`
+        laplist[0].appendChild(liLap)
+        laplist[2].appendChild(liOverAllTime)
+        // console.log(Number(digit[3].innerHTML));
+
+        // set interval for lap
+
+        if (lapFlag > 1) {
+            liLapTime.innerHTML = `${lapDigit[0].innerHTML} : ${lapDigit[1].innerHTML} : ${lapDigit[2].innerHTML} : ${lapDigit[3].innerHTML}`
+            laplist[1].appendChild(liLapTime)
+            lapDigit.forEach((val) => {
+                val.innerHTML = '00'
+            })
+            ms1 = 0
+            s1 = 0
+            m1 = 0
+            h1 = 0
+        } else {
+            liLapTime.innerHTML = `${lapDigit[0].innerHTML} : ${lapDigit[1].innerHTML} : ${lapDigit[2].innerHTML} : ${lapDigit[3].innerHTML}`
+            laplist[1].appendChild(liLapTime)
+            lapDigit.forEach((val) => {
+                val.innerHTML = '00'
+            })
+            ms1 = 0
+            s1 = 0
+            m1 = 0
+            h1 = 0
+        }
+
+        lapbox.style.opacity = '1'
+
+
+
+    })
+
+</script>
+
+</html>
